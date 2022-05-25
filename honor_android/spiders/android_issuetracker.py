@@ -6,7 +6,7 @@ from honor_android.util.file_util import FileUtil
 from definitions import OUTPUT_DIR
 
 class AndroidIssuetrackerSpider(scrapy.Spider):
-    name = 'android_issuetracker_1'
+    name = 'android_issuetracker'
     allowed_domains = ['issuetracker.google.com']
     component_list = []
     count = 0
@@ -19,8 +19,8 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
 
     def start_requests(self):
         data_list = self.get_data()
-        start = 0
-        end = 1
+        start = 190
+        end = 200
         for index, data in enumerate(data_list):
             if  index>=start and index <end:
                 question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(data.get('id'))
@@ -29,8 +29,9 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
     def parse_question(self, response):
         continue_flag = 1
         page_list = response.xpath('/html/body/div[1]/app-root/div/div/b-router-outlet/b-ng2-router-outlet/list-issues-page/div[2]/div/b-issues-grid/div/pop-grid/table/tbody/*')
-
+        con = 0
         for page in page_list:
+            con = 1
             page_url = page.xpath('td[6]/div/div/a/@href').extract()[0]
             if page_url in self.page_url_list:
                 continue_flag = 0
@@ -42,7 +43,7 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
                 yield scrapy.Request(url=page_url, callback=self.parse_page, meta={"id": response.meta.get('id'), "url": page_url, 'title': title})
 
         question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(response.meta.get('id')) + '&p=' + str(response.meta.get('page_num') + 1)
-        if continue_flag == 1:
+        if continue_flag == 1 and con == 1:
             yield scrapy.Request(url=question_url, callback=self.parse_question,
                                  meta={'id': response.meta.get('id'),
                                        'page_num': response.meta.get('page_num') + 1})
