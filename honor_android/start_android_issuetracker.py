@@ -22,4 +22,4 @@ sys.path.append(pa2)
 print(sys.path)
 
 
-execute(['scarpy', 'crawl', 'android_issuetracker'])
+execute(['scarpy', 'crawl', 'android_issuetracker_1'])

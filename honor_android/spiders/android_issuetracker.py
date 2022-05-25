@@ -1,48 +1,30 @@
+import os
 import uuid
-
 import scrapy
-
 from honor_android.items import AndroidIssueTrackerHTMLItem
-
+from honor_android.util.file_util import FileUtil
+from definitions import OUTPUT_DIR
 
 class AndroidIssuetrackerSpider(scrapy.Spider):
-    name = 'android_issuetracker'
+    name = 'android_issuetracker_1'
     allowed_domains = ['issuetracker.google.com']
     component_list = []
     count = 0
     repeat_count = 0
     page_url_list = []
 
+    def get_data(self):
+        file = os.path.join(OUTPUT_DIR, 'android_issuetracker_component.jl')
+        return FileUtil.load_data_list(file)
+
     def start_requests(self):
-        start_url = 'https://issuetracker.google.com/components/190923/manage'
-        yield scrapy.Request(url=start_url, callback=self.parse_digui, meta={"component_name": 'Android Public Tracker', 'component_id': 190923})
-
-
-    def parse_digui(self, response):
-        component = {
-            "component_name": response.meta.get('component_name'),
-            "component_id": response.meta.get('component_id')
-        }
-        print(component)
-        self.component_list.append(component)
-
-        li_list = response.xpath('/html/body/div[1]/app-root/div/div/b-router-outlet/b-ng2-router-outlet/manage-component-page/div[2]/div/mat-tab-group/div/mat-tab-body[1]/div/div/form/div[6]/b-component-children-list/ul/*')
-
-        for li in li_list:
-            tem_name = li.xpath('a/text()').extract()[0]
-            component_name = response.meta.get('component_name') + '.' + tem_name
-            component_url = li.xpath('a/@href').extract()[0]
-
-            index = component_url.find('/')
-            component_url = component_url[index + 1:]
-            index = component_url.find('/')
-            component_id = component_url[:index]
-            new_url = 'https://issuetracker.google.com/components/' + str(component_id) + '/manage'
-            yield scrapy.Request(url=new_url, callback=self.parse_digui, meta={"component_name": component_name, 'component_id': component_id})
-
-        question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(component.get('component_id'))
-        yield scrapy.Request(url=question_url, callback=self.parse_question, meta= {'last_url': 'first', 'component_id': component.get('component_id'), 'page_num': 1})
-
+        data_list = self.get_data()
+        start = 0
+        end = 1
+        for index, data in enumerate(data_list):
+            if  index>=start and index <end:
+                question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(data.get('id'))
+                yield scrapy.Request(url=question_url, callback=self.parse_question, meta={'id': data.get('id'), 'page_num': 1})
 
     def parse_question(self, response):
         continue_flag = 1
@@ -57,14 +39,12 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
                 self.page_url_list.append(page_url)
                 title = page.xpath('td[6]/div/div/a/text()').extract()[0]
                 page_url = 'https://issuetracker.google.com/' + page_url
-                yield scrapy.Request(url=page_url, callback=self.parse_page, meta={"url": page_url, 'title': title})
+                yield scrapy.Request(url=page_url, callback=self.parse_page, meta={"id": response.meta.get('id'), "url": page_url, 'title': title})
 
-        question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(
-            response.meta.get('component_id')) + '&p=' + str(response.meta.get('page_num') + 1)
+        question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(response.meta.get('id')) + '&p=' + str(response.meta.get('page_num') + 1)
         if continue_flag == 1:
             yield scrapy.Request(url=question_url, callback=self.parse_question,
-                                 meta={"last_url": response.request.url,
-                                       'component_id': response.meta.get('component_id'),
+                                 meta={'id': response.meta.get('id'),
                                        'page_num': response.meta.get('page_num') + 1})
 
     def parse_page(self, response):
@@ -81,5 +61,7 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
                 html_item = AndroidIssueTrackerHTMLItem()
                 html_item['id'] = str(uuid.uuid1())
                 html_item['url'] = response.meta.get('url')
+                html_item['component_id'] = response.meta.get('id')
+                html_item['title'] = response.meta.get('title')
                 html_item['html'] = response.text
                 yield html_item
