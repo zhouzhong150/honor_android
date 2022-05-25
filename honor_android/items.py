@@ -29,3 +29,7 @@ class AndroidIssueTrackerHTMLItem(scrapy.Item):
     url = scrapy.Field()
     html = scrapy.Field()
     title = scrapy.Field()
+
+class AndroidIssueTrackerComponentItem(scrapy.Item):
+    id = scrapy.Field()
+    name = scrapy.Field()
