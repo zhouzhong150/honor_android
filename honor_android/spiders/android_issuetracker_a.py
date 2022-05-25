@@ -6,7 +6,7 @@ from honor_android.util.file_util import FileUtil
 from definitions import OUTPUT_DIR
 
 class AndroidIssuetrackerSpider(scrapy.Spider):
-    name = 'android_issuetracker'
+    name = 'android_issuetracker_a'
     allowed_domains = ['issuetracker.google.com']
     component_list = []
     count = 0
@@ -19,8 +19,8 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
 
     def start_requests(self):
         data_list = self.get_data()
-        start = 180
-        end = 190
+        start = 80
+        end = 90
         for index, data in enumerate(data_list):
             if  index>=start and index <end:
                 question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(data.get('id'))
