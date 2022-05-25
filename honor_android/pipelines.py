@@ -21,6 +21,8 @@ class HonorAndroidPipeline:
             self.android_developerandroid_crawl_html = open(os.path.join(OUTPUT_DIR,'android_developerandroid_crawl_html.jl'), 'w')
         if spider.name == 'android_issuetracker':
             self.android_issuetracker_html = open(os.path.join(OUTPUT_DIR,'android_issuetracker_html.jl'), 'w')
+        if spider.name == 'android_issuetracker_component':
+            self.android_issuetracker_component = open(os.path.join(OUTPUT_DIR,'android_issuetracker_component.jl'), 'w')
 
 
     def process_item(self, item, spider):
@@ -35,6 +37,8 @@ class HonorAndroidPipeline:
             self.android_developerandroid_crawl_html.write(line)
         if spider.name == 'android_issuetracker':
             self.android_issuetracker_html.write(line)
+        if spider.name == 'android_issuetracker_component':
+            self.android_issuetracker_component.write(line)
 
         return item
 
@@ -50,3 +54,5 @@ class HonorAndroidPipeline:
             self.android_developerandroid_crawl_html.close()
         if spider.name == 'android_issuetracker':
             self.android_issuetracker_html.close()
+        if spider.name == 'android_issuetracker_component':
+            self.android_issuetracker_component.close()
