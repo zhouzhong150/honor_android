@@ -13,14 +13,14 @@ class AndroidIssuetrackerSpider(scrapy.Spider):
     repeat_count = 0
     page_url_list = []
 
-    def get_data(self):
+    def get_component_data(self):
         file = os.path.join(OUTPUT_DIR, 'android_issuetracker_component.jl')
         return FileUtil.load_data_list(file)
 
     def start_requests(self):
-        data_list = self.get_data()
-        start = 180
-        end = 190
+        data_list = self.get_component_data()
+        start = 150
+        end = 160
         for index, data in enumerate(data_list):
             if  index>=start and index <end:
                 question_url = 'https://issuetracker.google.com/issues?q=comment:' + str(data.get('id'))

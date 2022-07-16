@@ -1,8 +1,5 @@
-import uuid
-
 import scrapy
-
-from honor_android.items import AndroidIssueTrackerHTMLItem, AndroidIssueTrackerComponentItem
+from honor_android.items import AndroidIssueTrackerComponentItem
 
 
 class AndroidIssuetrackerSpider(scrapy.Spider):

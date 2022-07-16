@@ -19,7 +19,5 @@ pa1 = os.path.dirname(os.path.abspath(__file__))
 pa2 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(pa1)
 sys.path.append(pa2)
-print(sys.path)
-
 
 execute(['scarpy', 'crawl', 'android_issuetracker_component'])

@@ -1,7 +1,6 @@
 import uuid
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-
 from honor_android.items import AndroidDeveloperAndroidHTMLItem
 
 
@@ -12,11 +11,11 @@ class AndroidDeveloperCrawlSpider(CrawlSpider):
     drop_count = 0
     process_count = 0
     '''
-    
     '''
     rules = (
-        Rule(LinkExtractor(allow=r'https://developer.android.com/',
-                           deny=r'https://developer.android.com/reference|\?|https://developer.android.com/sdk'),
+        Rule(LinkExtractor(allow=r'https://developer.android.com/'),
+
+             #deny=r'https://developer.android.com/reference|\?|https://developer.android.com/sdk'
              callback='parse_item',
              follow=True
              ),

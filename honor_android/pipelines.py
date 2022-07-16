@@ -22,9 +22,9 @@ class HonorAndroidPipeline:
         if spider.name == 'android_issuetracker_component':
             self.android_issuetracker_component = open(os.path.join(OUTPUT_DIR,'android_issuetracker_component.jl'), 'w')
         if spider.name == 'android_issuetracker':
-            self.android_issuetracker_html = open(os.path.join(OUTPUT_DIR,'android_issuetracker_19_html.jl'), 'w')
+            self.android_issuetracker_html = open(os.path.join(OUTPUT_DIR,'android_issuetracker_16_html.jl'), 'w')
         if spider.name == 'android_issuetracker_a':
-            self.android_issuetracker_a_html = open(os.path.join(OUTPUT_DIR,'android_issuetracker_9_html.jl'), 'w')
+            self.android_issuetracker_a_html = open(os.path.join(OUTPUT_DIR,'android_issuetracker_17_html.jl'), 'w')
         if spider.name == 'android_issuetracker_b':
             self.android_issuetracker_b_html = open(os.path.join(OUTPUT_DIR,'android_issuetracker_1_html.jl'), 'w')
 

@@ -40,7 +40,7 @@ class FileUtil:
     @staticmethod
     def load_data_list_from_json(json_file_path):
         with open(json_file_path) as file:
-            data_list = json.load(file)
+            data_list = json.load(file, encodings='gbk')
         return data_list
 
 
